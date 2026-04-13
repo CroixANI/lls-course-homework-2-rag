@@ -87,6 +87,13 @@ def retrieve(query: str):
     faiss.normalize_L2(q_emb)
 
     scores, ids = index.search(q_emb, TOP_K)
+
+    print(f'[RAG] Найдено чанков: {len(ids[0])} для запроса: "{query}"')
+    for rank, (score, idx) in enumerate(zip(scores[0], ids[0]), start=1):
+        chunk = chunks[idx]
+        preview = chunk['text'][:80].replace('\n', ' ')
+        print(f'[RAG] #{rank} | score={score:.4f} | source={chunk["source"]} | "{preview}"')
+
     return [chunks[i] for i in ids[0]]
 
 
